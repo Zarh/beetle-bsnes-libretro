@@ -268,8 +268,15 @@ static void update_input(void)
          uint8_t b[2];
          uint16_t s;
       } u;
+	  
+#ifdef __CELLOS_LV2__
+      u.s = *(uint16_t*) &input_buf[j][0];
+      *(uint16_t*) &input_buf[j][0] = u.b[0] | u.b[1] << 8;
+#else
       u.s = input_buf[j];
       input_buf[j] = u.b[0] | u.b[1] << 8;
+#endif
+     
 #else
       input_buf[j][0] = (input_state >> 0) & 0xff;
       input_buf[j][1] = (input_state >> 8) & 0xff;
